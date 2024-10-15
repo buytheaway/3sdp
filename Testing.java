@@ -1,9 +1,16 @@
+import java.util.Scanner;
+
 public class Testing {
     public static void main(String[] args) {
-        ShoppingFacade shoppingFacade = new ShoppingFacade();
+        Facade shoppingFacade = new Facade();
+        Scanner scanner = new Scanner(System.in);
 
-        shoppingFacade.placeOrder("Laptop", 999.99);
-        shoppingFacade.placeOrder("Phone", 599.99);
-        shoppingFacade.placeOrder("Smartwatch", 299.99);
+        System.out.println("Welcome to the online shop!");
+        shoppingFacade.displayProducts();
+
+        System.out.println("\nEnter the name of the product you want to order:");
+        String productName = scanner.nextLine();
+
+        shoppingFacade.placeOrder(productName);
     }
 }

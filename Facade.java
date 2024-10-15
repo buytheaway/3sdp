@@ -11,7 +11,7 @@ class Facade {
         shippingService = new ShippingService();
     }
 
-    public void placeOrder(String productName, double paymentAmount) {
+    public void placeOrder(String productName) {
         System.out.println("Starting order process for " + productName + "...");
 
         if (productCatalog.productExists(productName)) {
@@ -34,5 +34,9 @@ class Facade {
         } else {
             System.out.println("Product " + productName + " not found.");
         }
+    }
+
+    public void displayProducts() {
+        productCatalog.displayProducts();
     }
 }

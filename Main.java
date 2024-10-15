@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 class ProductCatalog {
     private Map<String, Double> products;
@@ -19,8 +20,14 @@ class ProductCatalog {
     public boolean productExists(String productName) {
         return products.containsKey(productName);
     }
-}
 
+    public void displayProducts() {
+        System.out.println("Available products:");
+        for (String product : products.keySet()) {
+            System.out.println(product + ": $" + products.get(product));
+        }
+    }
+}
 
 class PaymentProcessor {
     public boolean processPayment(String product, double amount) {
@@ -63,31 +70,47 @@ class ShoppingFacade {
         shippingService = new ShippingService();
     }
 
-    public void placeOrder(String productName, double paymentAmount) {
+    public void placeOrder(String productName) {
         System.out.println("Starting order process for " + productName + "...");
 
-        String product = String.valueOf(productCatalog.searchProduct(productName));
+        if (productCatalog.productExists(productName)) {
+            Double productPrice = productCatalog.searchProduct(productName);
 
-        if (inventoryManager.checkStock(product)) {
-            double shippingCost = shippingService.calculateShipping(product);
-            double totalCost = paymentAmount + shippingCost;
+            if (inventoryManager.checkStock(productName)) {
+                double shippingCost = shippingService.calculateShipping(productName);
+                double totalCost = productPrice + shippingCost;
 
-            if (paymentProcessor.processPayment(product, totalCost)) {
-                inventoryManager.updateInventory(product);
-                shippingService.shipProduct(product);
-                System.out.println("Order completed for " + product + ". Total cost: $" + totalCost);
+                if (paymentProcessor.processPayment(productName, totalCost)) {
+                    inventoryManager.updateInventory(productName);
+                    shippingService.shipProduct(productName);
+                    System.out.println("Order completed for " + productName + ". Total cost: $" + totalCost);
+                } else {
+                    System.out.println("Payment failed for " + productName);
+                }
             } else {
-                System.out.println("Payment failed for " + product);
+                System.out.println(productName + " is out of stock.");
             }
         } else {
-            System.out.println(product + " is out of stock.");
+            System.out.println("Product " + productName + " not found.");
         }
+    }
+
+    public void displayProducts() {
+        productCatalog.displayProducts();
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        Facade shoppingFacade = new Facade();
-        shoppingFacade.placeOrder("Laptop", 999.99);
+        ShoppingFacade shoppingFacade = new ShoppingFacade();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to the online shop!");
+        shoppingFacade.displayProducts();
+
+        System.out.println("\nEnter the name of the product you want to order:");
+        String productName = scanner.nextLine();
+
+        shoppingFacade.placeOrder(productName);
     }
 }
