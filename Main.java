@@ -57,21 +57,19 @@ class ShippingService {
     }
 }
 
-class ShoppingFacade {
-    private ProductCatalog productCatalog;
-    private PaymentProcessor paymentProcessor;
-    private InventoryManager inventoryManager;
-    private ShippingService shippingService;
+public class Main {
+    public static void main(String[] args) {
+        ProductCatalog productCatalog = new ProductCatalog();
+        PaymentProcessor paymentProcessor = new PaymentProcessor();
+        InventoryManager inventoryManager = new InventoryManager();
+        ShippingService shippingService = new ShippingService();
+        Scanner scanner = new Scanner(System.in);
 
-    public ShoppingFacade() {
-        productCatalog = new ProductCatalog();
-        paymentProcessor = new PaymentProcessor();
-        inventoryManager = new InventoryManager();
-        shippingService = new ShippingService();
-    }
+        System.out.println("Welcome to the online shop!");
+        productCatalog.displayProducts();
 
-    public void placeOrder(String productName) {
-        System.out.println("Starting order process for " + productName + "...");
+        System.out.println("\nEnter the name of the product you want to order:");
+        String productName = scanner.nextLine();
 
         if (productCatalog.productExists(productName)) {
             Double productPrice = productCatalog.searchProduct(productName);
@@ -93,24 +91,5 @@ class ShoppingFacade {
         } else {
             System.out.println("Product " + productName + " not found.");
         }
-    }
-
-    public void displayProducts() {
-        productCatalog.displayProducts();
-    }
-}
-
-public class Main {
-    public static void main(String[] args) {
-        ShoppingFacade shoppingFacade = new ShoppingFacade();
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Welcome to the online shop!");
-        shoppingFacade.displayProducts();
-
-        System.out.println("\nEnter the name of the product you want to order:");
-        String productName = scanner.nextLine();
-
-        shoppingFacade.placeOrder(productName);
     }
 }
